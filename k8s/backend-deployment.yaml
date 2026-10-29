@@ -1,3 +1,4 @@
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -15,43 +16,78 @@ spec:
         app: backend
     spec:
       containers:
-      - name: backend
-        image: mohdayazz/stockpilot-backend:v1
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 5000
-        env:
-        - name: NODE_ENV
-          value: production
-        - name: PORT
-          value: "5000"
-        - name: DB_HOST
-          valueFrom:
-            secretKeyRef:
-              name: rds-secret
-              key: db-host
-        - name: DB_PORT
-          value: "3306"
-        - name: DB_USER
-          valueFrom:
-            secretKeyRef:
-              name: rds-secret
-              key: db-user
-        - name: DB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: rds-secret
-              key: db-password
-        - name: DB_NAME
-          value: "stockpilot"
-        - name: DB_SSL
-          value: "false"
-        - name: JWT_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: rds-secret
-              key: jwt-secret
-        - name: JWT_EXPIRES_IN
-          value: 1d
-        - name: CORS_ORIGIN
-          value: "*"
+        - name: backend
+          image: mohdayazz/stockpilot-backend:v1
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 5000
+              protocol: TCP
+
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "5000"
+
+            # Amazon RDS MySQL connection
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: rds-secret
+                  key: db-host
+            - name: DB_PORT
+              value: "3306"
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: rds-secret
+                  key: db-user
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rds-secret
+                  key: db-password
+            - name: DB_NAME
+              value: "stockpilot"
+            - name: DB_SSL
+              value: "true"
+            - name: DB_SSL_CA
+              value: "/etc/ssl/certs/rds/global-bundle.pem"
+
+            # JWT authentication
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: rds-secret
+                  key: jwt-secret
+            - name: JWT_EXPIRES_IN
+              value: "1d"
+
+            # Update to your actual frontend origin for production
+            - name: CORS_ORIGIN
+              value: "*"
+
+          volumeMounts:
+            - name: rds-ca-bundle
+              mountPath: /etc/ssl/certs/rds
+              readOnly: true
+
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 5000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 5000
+            initialDelaySeconds: 20
+            periodSeconds: 20
+
+      volumes:
+        - name: rds-ca-bundle
+          configMap:
+            name: rds-ca-bundle
