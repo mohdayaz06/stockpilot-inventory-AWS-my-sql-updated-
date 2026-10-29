@@ -1,0 +1,89 @@
+<div class="page-header">
+  <div>
+    <span class="eyebrow">Inventory</span>
+    <h1>Products</h1>
+  </div>
+  <a href="#!/products/new" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Add product</a>
+</div>
+
+<div class="alert alert-danger" ng-if="vm.errorMessage">{{ vm.errorMessage }}</div>
+
+<div class="card" style="padding:16px 20px; margin-bottom:16px;">
+  <form ng-submit="vm.search()" class="d-flex gap-3" style="flex-wrap: wrap; align-items: flex-end;">
+    <div class="form-group mb-0" style="flex:2; min-width:200px;">
+      <label>Search</label>
+      <input type="text" class="form-control" placeholder="Search by name or SKU" ng-model="vm.filters.search" />
+    </div>
+    <div class="form-group mb-0" style="flex:1; min-width:160px;">
+      <label>Category</label>
+      <select class="form-control" ng-model="vm.filters.category">
+        <option value="">All categories</option>
+        <option ng-repeat="cat in vm.categories" value="{{ cat._id }}">{{ cat.name }}</option>
+      </select>
+    </div>
+    <div class="form-group mb-0" style="padding-bottom:9px;">
+      <label style="display:flex; align-items:center; gap:6px; margin-bottom:0;">
+        <input type="checkbox" ng-model="vm.filters.lowStock" /> Low stock only
+      </label>
+    </div>
+    <div class="form-group mb-0">
+      <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i> Search</button>
+    </div>
+    <div class="form-group mb-0">
+      <button type="button" class="btn btn-outline" ng-click="vm.clearFilters()">Clear</button>
+    </div>
+  </form>
+</div>
+
+<div class="card table-card">
+  <div class="empty-state" ng-if="!vm.isLoading && vm.products.length === 0">
+    <i class="bi bi-inbox"></i>
+    No products match your filters yet. Try clearing them, or add a new product.
+  </div>
+
+  <table class="data-table" ng-if="vm.products.length > 0">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>SKU</th>
+        <th>Category</th>
+        <th class="numeric">Price</th>
+        <th class="numeric">Quantity</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="product in vm.products">
+        <td>
+          <div>{{ product.name }}</div>
+          <div class="text-muted" style="font-size:0.78rem;">{{ product.warehouseLocation }}</div>
+        </td>
+        <td><span class="bin-tag" ng-class="{low: product.lowStock}">{{ product.sku }}</span></td>
+        <td>{{ product.category.name || '—' }}</td>
+        <td class="numeric">${{ product.price | number:2 }}</td>
+        <td class="numeric">{{ product.quantity }}</td>
+        <td>
+          <span class="badge badge-warn" ng-if="product.lowStock">Low stock</span>
+          <span class="badge badge-success" ng-if="!product.lowStock">In stock</span>
+        </td>
+        <td>
+          <div class="row-actions">
+            <a href="#!/products/{{ product._id }}/edit" class="btn btn-outline btn-sm"><i class="bi bi-pencil"></i></a>
+            <button class="btn btn-danger btn-sm" ng-if="vm.isAdmin" ng-click="vm.confirmDelete(product)">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="pagination-bar" ng-if="vm.pagination.pages > 1">
+    <span>Page {{ vm.pagination.page }} of {{ vm.pagination.pages }} &middot; {{ vm.pagination.total }} total</span>
+    <div class="d-flex gap-2">
+      <button class="btn btn-outline btn-sm" ng-disabled="vm.pagination.page <= 1" ng-click="vm.goToPage(vm.pagination.page - 1)">Previous</button>
+      <button class="btn btn-outline btn-sm" ng-disabled="vm.pagination.page >= vm.pagination.pages" ng-click="vm.goToPage(vm.pagination.page + 1)">Next</button>
+    </div>
+  </div>
+</div>

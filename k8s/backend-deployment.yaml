@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  labels:
+    app: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: mohdayazz/stockpilot-backend:v1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+        env:
+        - name: NODE_ENV
+          value: production
+        - name: PORT
+          value: "5000"
+        - name: DB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: rds-secret
+              key: db-host
+        - name: DB_PORT
+          value: "3306"
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: rds-secret
+              key: db-user
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: rds-secret
+              key: db-password
+        - name: DB_NAME
+          value: "stockpilot"
+        - name: DB_SSL
+          value: "false"
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: rds-secret
+              key: jwt-secret
+        - name: JWT_EXPIRES_IN
+          value: 1d
+        - name: CORS_ORIGIN
+          value: "*"

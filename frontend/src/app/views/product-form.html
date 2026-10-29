@@ -1,0 +1,87 @@
+<div class="page-header">
+  <div>
+    <span class="eyebrow">Inventory</span>
+    <h1>{{ vm.isEditMode ? 'Edit product' : 'Add product' }}</h1>
+  </div>
+</div>
+
+<div class="alert alert-danger" ng-if="vm.errorMessage">{{ vm.errorMessage }}</div>
+
+<div class="card form-panel" ng-if="!vm.isLoading">
+  <form name="productForm" novalidate ng-submit="vm.submit(productForm)">
+    <div class="form-group">
+      <label for="name">Product name</label>
+      <input
+        type="text" id="name" name="name" class="form-control"
+        ng-class="{'is-invalid': productForm.name.$invalid && productForm.name.$touched}"
+        ng-model="vm.product.name" required maxlength="100"
+        placeholder="e.g. Wireless Barcode Scanner"
+      />
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="sku">SKU</label>
+        <input
+          type="text" id="sku" name="sku" class="form-control mono"
+          ng-model="vm.product.sku" required
+          placeholder="e.g. ELEC-BC-001"
+        />
+      </div>
+      <div class="form-group">
+        <label for="category">Category</label>
+        <select id="category" name="category" class="form-control" ng-model="vm.product.category" required>
+          <option value="" disabled selected>Select a category</option>
+          <option ng-repeat="cat in vm.categories" value="{{ cat._id }}">{{ cat.name }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea id="description" name="description" class="form-control" rows="3" maxlength="500"
+        ng-model="vm.product.description" placeholder="Optional details about this product"></textarea>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="price">Price (USD)</label>
+        <input type="number" id="price" name="price" class="form-control" min="0" step="0.01"
+          ng-model="vm.product.price" required placeholder="0.00" />
+      </div>
+      <div class="form-group">
+        <label for="quantity">Quantity on hand</label>
+        <input type="number" id="quantity" name="quantity" class="form-control" min="0"
+          ng-model="vm.product.quantity" />
+      </div>
+      <div class="form-group">
+        <label for="reorderLevel">Reorder level</label>
+        <input type="number" id="reorderLevel" name="reorderLevel" class="form-control" min="0"
+          ng-model="vm.product.reorderLevel" />
+        <div class="hint">Flagged as low stock at or below this quantity</div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="supplier">Supplier</label>
+        <input type="text" id="supplier" name="supplier" class="form-control" maxlength="100"
+          ng-model="vm.product.supplier" placeholder="e.g. ScanTech Industries" />
+      </div>
+      <div class="form-group">
+        <label for="warehouseLocation">Warehouse location</label>
+        <input type="text" id="warehouseLocation" name="warehouseLocation" class="form-control mono"
+          ng-model="vm.product.warehouseLocation" placeholder="e.g. A1-03" />
+      </div>
+    </div>
+
+    <div class="d-flex gap-2" style="margin-top: 10px;">
+      <button type="submit" class="btn btn-primary" ng-disabled="vm.isSubmitting">
+        <span class="spinner" ng-if="vm.isSubmitting"></span>
+        <span ng-if="!vm.isSubmitting">{{ vm.isEditMode ? 'Save changes' : 'Create product' }}</span>
+        <span ng-if="vm.isSubmitting">Saving...</span>
+      </button>
+      <button type="button" class="btn btn-outline" ng-click="vm.cancel()">Cancel</button>
+    </div>
+  </form>
+</div>

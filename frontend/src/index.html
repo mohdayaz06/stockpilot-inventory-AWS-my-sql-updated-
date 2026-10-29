@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="stockpilotApp">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StockPilot | Inventory Management</title>
+
+  <!-- Fonts: Space Grotesk (display), Inter (body), IBM Plex Mono (data/SKU) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Vendor CSS (populated into ./vendor by `npm install` -> copy-vendor script) -->
+  <link rel="stylesheet" href="vendor/bootstrap.min.css" />
+  <link rel="stylesheet" href="vendor/bootstrap-icons.min.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body ng-controller="ShellController as shell">
+
+  <!-- ==================== Authenticated app shell ==================== -->
+  <div class="app-shell" ng-if="shell.currentUser">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">SP</div>
+        <h1 class="brand-mark mb-0">StockPilot</h1>
+      </div>
+      <nav>
+        <a href="#!/dashboard" class="nav-link" ng-class="{active: shell.isActive('/dashboard')}">
+          <i class="bi bi-grid-1x2"></i> Dashboard
+        </a>
+        <a href="#!/products" class="nav-link" ng-class="{active: shell.isActive('/products')}">
+          <i class="bi bi-box-seam"></i> Products
+        </a>
+        <a href="#!/categories" class="nav-link" ng-class="{active: shell.isActive('/categories')}">
+          <i class="bi bi-tags"></i> Categories
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        StockPilot v1.0.0<br />
+        Inventory Management System
+      </div>
+    </aside>
+
+    <div class="main-area">
+      <header class="topbar">
+        <div class="search-box">
+          <i class="bi bi-search"></i>
+          <input type="text" placeholder="Quick search is available on the Products page" disabled />
+        </div>
+        <div class="user-chip">
+          <div class="avatar">{{ shell.initials(shell.currentUser.name) }}</div>
+          <div>
+            <div>{{ shell.currentUser.name }}</div>
+            <div class="text-muted" style="font-size:0.75rem; text-transform:capitalize;">{{ shell.currentUser.role }}</div>
+          </div>
+          <button class="btn btn-outline btn-sm" ng-click="shell.logout()">
+            <i class="bi bi-box-arrow-right"></i> Log out
+          </button>
+        </div>
+      </header>
+
+      <main class="content">
+        <div ng-view></div>
+      </main>
+    </div>
+  </div>
+
+  <!-- ==================== Public (unauthenticated) views ==================== -->
+  <div ng-if="!shell.currentUser">
+    <div ng-view></div>
+  </div>
+
+  <!-- ==================== Vendor JS ==================== -->
+  <script src="vendor/angular.min.js"></script>
+  <script src="vendor/angular-route.min.js"></script>
+  <script src="vendor/angular-resource.min.js"></script>
+  <script src="vendor/bootstrap.bundle.min.js"></script>
+
+  <!-- ==================== App JS ==================== -->
+  <script src="app/app.module.js"></script>
+  <script src="app/app.config.js"></script>
+  <script src="app/interceptors/auth.interceptor.js"></script>
+  <script src="app/services/auth.service.js"></script>
+  <script src="app/services/product.service.js"></script>
+  <script src="app/services/category.service.js"></script>
+  <script src="app/controllers/shell.controller.js"></script>
+  <script src="app/controllers/login.controller.js"></script>
+  <script src="app/controllers/register.controller.js"></script>
+  <script src="app/controllers/dashboard.controller.js"></script>
+  <script src="app/controllers/product-list.controller.js"></script>
+  <script src="app/controllers/product-form.controller.js"></script>
+  <script src="app/controllers/category.controller.js"></script>
+</body>
+</html>

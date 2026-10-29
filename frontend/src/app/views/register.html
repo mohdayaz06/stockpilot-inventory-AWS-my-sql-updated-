@@ -1,0 +1,84 @@
+<div class="auth-shell">
+  <div class="auth-brand-panel">
+    <div class="brand-icon" style="width:44px;height:44px;font-size:1.1rem;">SP</div>
+    <h1>Set up your team in minutes.</h1>
+    <p>Create an account to start tracking products, categories, and stock levels.</p>
+
+    <div class="stack">
+      <span class="bin-tag"><i class="bi bi-boxes"></i> Multi-user access</span>
+      <span class="bin-tag"><i class="bi bi-shield-check"></i> Role-based permissions</span>
+      <span class="bin-tag"><i class="bi bi-graph-up"></i> Live stock reporting</span>
+    </div>
+  </div>
+
+  <div class="auth-form-panel">
+    <div class="auth-form-inner">
+      <h2>Create your account</h2>
+      <p class="sub">Get access to the inventory dashboard.</p>
+
+      <div class="alert alert-danger" ng-if="vm.errorMessage">{{ vm.errorMessage }}</div>
+
+      <form name="registerForm" novalidate ng-submit="vm.submit(registerForm)">
+        <div class="form-group">
+          <label for="name">Full name</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            class="form-control"
+            ng-model="vm.form.name"
+            required
+            maxlength="60"
+            placeholder="Asha Rao"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="reg-email">Email address</label>
+          <input
+            type="email"
+            id="reg-email"
+            name="email"
+            class="form-control"
+            ng-model="vm.form.email"
+            required
+            placeholder="you@company.com"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="reg-password">Password</label>
+          <input
+            type="password"
+            id="reg-password"
+            name="password"
+            class="form-control"
+            ng-model="vm.form.password"
+            required
+            minlength="6"
+            placeholder="At least 6 characters"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="role">Role</label>
+          <select id="role" name="role" class="form-control" ng-model="vm.form.role">
+            <option value="staff">Staff</option>
+            <option value="admin">Admin</option>
+          </select>
+          <div class="hint">Admins can delete products/categories; staff can create and edit.</div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width:100%;" ng-disabled="vm.isSubmitting">
+          <span class="spinner" ng-if="vm.isSubmitting"></span>
+          <span ng-if="!vm.isSubmitting">Create account</span>
+          <span ng-if="vm.isSubmitting">Creating account...</span>
+        </button>
+      </form>
+
+      <p class="text-muted" style="margin-top:20px; font-size:0.85rem;">
+        Already have an account? <a href="#!/login">Sign in</a>
+      </p>
+    </div>
+  </div>
+</div>

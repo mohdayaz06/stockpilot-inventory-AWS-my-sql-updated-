@@ -1,0 +1,57 @@
+<div class="page-header">
+  <div>
+    <span class="eyebrow">Inventory</span>
+    <h1>Categories</h1>
+  </div>
+</div>
+
+<div class="alert alert-danger" ng-if="vm.errorMessage">{{ vm.errorMessage }}</div>
+
+<div class="card" style="padding:20px; margin-bottom:16px;" ng-if="vm.isAdmin">
+  <h2 style="font-size:1rem; margin-top:0;">Add a category</h2>
+  <form name="categoryForm" novalidate ng-submit="vm.createCategory(categoryForm)" class="d-flex gap-3" style="align-items:flex-end; flex-wrap:wrap;">
+    <div class="form-group mb-0" style="flex:1; min-width:200px;">
+      <label for="cat-name">Name</label>
+      <input type="text" id="cat-name" name="name" class="form-control" ng-model="vm.newCategory.name" required maxlength="50" placeholder="e.g. Electronics" />
+    </div>
+    <div class="form-group mb-0" style="flex:2; min-width:240px;">
+      <label for="cat-desc">Description</label>
+      <input type="text" id="cat-desc" name="description" class="form-control" ng-model="vm.newCategory.description" maxlength="250" placeholder="Optional short description" />
+    </div>
+    <div class="form-group mb-0">
+      <button type="submit" class="btn btn-primary" ng-disabled="vm.isSubmitting || categoryForm.$invalid">
+        <i class="bi bi-plus-lg"></i> Add
+      </button>
+    </div>
+  </form>
+</div>
+
+<div class="card table-card">
+  <div class="empty-state" ng-if="!vm.isLoading && vm.categories.length === 0">
+    <i class="bi bi-tags"></i>
+    No categories yet. Add one above to start organizing products.
+  </div>
+
+  <table class="data-table" ng-if="vm.categories.length > 0">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="cat in vm.categories">
+        <td>{{ cat.name }}</td>
+        <td class="text-muted">{{ cat.description || '—' }}</td>
+        <td>
+          <div class="row-actions">
+            <button class="btn btn-danger btn-sm" ng-if="vm.isAdmin" ng-click="vm.deleteCategory(cat)">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

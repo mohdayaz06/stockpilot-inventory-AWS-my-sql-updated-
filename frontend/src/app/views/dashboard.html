@@ -1,0 +1,61 @@
+<div class="page-header">
+  <div>
+    <span class="eyebrow">Overview</span>
+    <h1>Dashboard</h1>
+  </div>
+  <a href="#!/products/new" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Add product</a>
+</div>
+
+<div class="alert alert-danger" ng-if="vm.errorMessage">{{ vm.errorMessage }}</div>
+
+<div class="stat-grid" ng-if="vm.stats">
+  <div class="card stat-card primary">
+    <div class="stat-label">Total products</div>
+    <div class="stat-value">{{ vm.stats.totalProducts }}</div>
+  </div>
+  <div class="card stat-card">
+    <div class="stat-label">Total units in stock</div>
+    <div class="stat-value">{{ vm.stats.totalUnits }}</div>
+  </div>
+  <div class="card stat-card success">
+    <div class="stat-label">Inventory value</div>
+    <div class="stat-value">${{ vm.stats.totalValue | number:2 }}</div>
+  </div>
+  <div class="card stat-card warn">
+    <div class="stat-label">Low stock alerts</div>
+    <div class="stat-value">{{ vm.stats.lowStockCount }}</div>
+  </div>
+</div>
+
+<div class="card table-card">
+  <div class="d-flex justify-between align-center" style="padding:16px 20px; border-bottom:1px solid var(--c-border);">
+    <h2 style="font-size:1rem; margin:0;">Items needing reorder</h2>
+    <a href="#!/products" class="text-muted" style="font-size:0.85rem;">View all products &rarr;</a>
+  </div>
+
+  <div class="empty-state" ng-if="!vm.isLoading && vm.lowStockItems.length === 0">
+    <i class="bi bi-check-circle"></i>
+    All stock levels are healthy. Nothing needs reordering right now.
+  </div>
+
+  <table class="data-table" ng-if="vm.lowStockItems.length > 0">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>SKU</th>
+        <th class="numeric">Quantity</th>
+        <th class="numeric">Reorder level</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="item in vm.lowStockItems">
+        <td>{{ item.name }}</td>
+        <td><span class="bin-tag low">{{ item.sku }}</span></td>
+        <td class="numeric">{{ item.quantity }}</td>
+        <td class="numeric">{{ item.reorderLevel }}</td>
+        <td><span class="badge badge-warn">Reorder soon</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

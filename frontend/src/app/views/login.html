@@ -1,0 +1,68 @@
+<div class="auth-shell">
+  <div class="auth-brand-panel">
+    <div class="brand-icon" style="width:44px;height:44px;font-size:1.1rem;">SP</div>
+    <h1>Track every unit, from dock to shelf.</h1>
+    <p>StockPilot keeps your warehouse inventory accurate, searchable, and one login away.</p>
+
+    <div class="stack">
+      <span class="bin-tag"><i class="bi bi-upc-scan"></i> SKU ELEC-BC-001 &middot; 42 units</span>
+      <span class="bin-tag"><i class="bi bi-upc-scan"></i> SKU WHS-PJ-020 &middot; 6 units</span>
+      <span class="bin-tag"><i class="bi bi-upc-scan"></i> SKU PKG-BX-030 &middot; 150 units</span>
+    </div>
+  </div>
+
+  <div class="auth-form-panel">
+    <div class="auth-form-inner">
+      <h2>Welcome back</h2>
+      <p class="sub">Sign in to manage your inventory.</p>
+
+      <div class="alert alert-danger" ng-if="vm.errorMessage">{{ vm.errorMessage }}</div>
+
+      <form name="loginForm" novalidate ng-submit="vm.submit(loginForm)">
+        <div class="form-group">
+          <label for="email">Email address</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            class="form-control"
+            ng-class="{'is-invalid': loginForm.email.$invalid && loginForm.email.$touched}"
+            ng-model="vm.credentials.email"
+            required
+            placeholder="you@company.com"
+          />
+          <div class="field-error" ng-if="loginForm.email.$invalid && loginForm.email.$touched">
+            Enter a valid email address.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            class="form-control"
+            ng-model="vm.credentials.password"
+            required
+            placeholder="••••••••"
+          />
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width:100%;" ng-disabled="vm.isSubmitting">
+          <span class="spinner" ng-if="vm.isSubmitting"></span>
+          <span ng-if="!vm.isSubmitting">Sign in</span>
+          <span ng-if="vm.isSubmitting">Signing in...</span>
+        </button>
+      </form>
+
+      <p class="text-muted" style="margin-top:20px; font-size:0.85rem;">
+        Don't have an account? <a href="#!/register">Create one</a>
+      </p>
+
+      <p class="text-muted" style="margin-top:12px; font-size:0.78rem;">
+        Demo: <code>admin@stockpilot.io</code> / <code>Admin@123</code>
+      </p>
+    </div>
+  </div>
+</div>
